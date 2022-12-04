@@ -413,6 +413,8 @@ specifiers.
 
 *%g*	Number of notifications in the current group
 
+*%i*	Notification id
+
 ## For the hidden notifications placeholder
 
 *%h*	Number of hidden notifications
@@ -425,7 +427,8 @@ mako supports applying style options conditionally via modes. A configuration
 section with a _mode_ criteria will only be applied if the current mode
 matches. **makoctl**(1) can be used to change the current mode.
 
-The default mode is named "default".
+The initial list of modes contains a single mode called "default". This is
+deprecated, in a future version the initial list of modes will be empty.
 
 For example, to hide all notifications if the mode "do-not-disturb" is
 enabled:
@@ -435,8 +438,8 @@ enabled:
 invisible=1
 ```
 
-_makoctl set-mode do-not-disturb_ will hide all notifications,
-_makoctl set-mode default_ will show them again.
+_makoctl mode -a do-not-disturb_ will hide all notifications,
+_makoctl mode -r do-not-disturb_ will show them again.
 
 # AUTHORS
 

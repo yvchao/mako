@@ -1,7 +1,7 @@
 project(
 	'mako',
 	'c',
-	version: '1.6',
+	version: '1.7.1',
 	license: 'MIT',
 	meson_version: '>=0.60.0',
 	default_options: [
@@ -12,11 +12,11 @@ project(
 )
 
 add_project_arguments([
+	'-Wundef',
+
 	'-Wno-unused-parameter',
 	'-Wno-missing-braces',
 ], language: 'c')
-
-datadir = get_option('datadir')
 
 mako_inc = include_directories('include')
 
@@ -34,7 +34,7 @@ wayland_cursor = dependency('wayland-cursor')
 
 epoll = dependency('', required: false)
 if (not cc.has_function('timerfd_create', prefix: '#include <sys/timerfd.h>') or
-    not cc.has_function('signalfd', prefix: '#include <sys/signalfd.h>'))
+		not cc.has_function('signalfd', prefix: '#include <sys/signalfd.h>'))
 	epoll = dependency('epoll-shim')
 endif
 
@@ -61,6 +61,7 @@ src_files = [
 	'dbus/mako.c',
 	'dbus/xdg.c',
 	'main.c',
+	'mode.c',
 	'notification.c',
 	'pool-buffer.c',
 	'render.c',
@@ -104,13 +105,13 @@ install_data(
 )
 
 conf_data = configuration_data()
-conf_data.set('bindir', join_paths(get_option('prefix'), get_option('bindir')))
+conf_data.set('bindir', get_option('prefix') / get_option('bindir'))
 
 configure_file(
 	configuration: conf_data,
 	input: 'fr.emersion.mako.service.in',
 	output: '@BASENAME@',
-	install_dir: datadir + '/dbus-1/services',
+	install_dir: get_option('datadir') + '/dbus-1/services',
 )
 
 scdoc = dependency('scdoc', required: get_option('man-pages'), version: '>= 1.9.7', native: true)
@@ -135,3 +136,9 @@ if scdoc.found()
 		)
 	endforeach
 endif
+
+summary({
+	'sd-bus provider': sdbus.name(),
+	'Icons': gdk_pixbuf.found(),
+	'Man pages': scdoc.found(),
+}, bool_yn: true)

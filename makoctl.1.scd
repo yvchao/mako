@@ -67,11 +67,22 @@ Sends IPC commands to the running mako daemon via dbus.
 *list*
 	Retrieve a list of current notifications.
 
+*history*
+	Retrieve a list of dismissed notifications.
+
 *reload*
 	Reloads the configuration file.
 
-*set-mode* <name>
-	Switches the current mode to _name_. This replaces the previous mode.
+*mode* ++
+*mode* -s <mode>... ++
+*mode* [-a mode]... [-r mode]...
+	When run without any option, retrieves a list of current modes.
+
+	When run with the _-s_ option, replaces the current modes with the provided
+	list.
+
+	When run with the _-a_ or _-r_ options, adds or removes the provided mode
+	from the current modes.
 
 	See the _MODES_ section in **mako**(5) for more information about modes.
 
